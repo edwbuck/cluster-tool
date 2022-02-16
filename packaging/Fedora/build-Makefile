@@ -1,0 +1,35 @@
+# This makefile is for the packaging internal build only.
+# Do not use it to package the product.
+#
+PACKAGE=cluster-tool
+
+PREFIX=/usr/local
+EXEC_PREFIX=$(PREFIX)
+BINDIR=$(EXEC_PREFIX)/bin
+SBINDIR=$(EXEC_PREFIX)/sbin
+LIBEXECDIR=$(EXEC_PREFIX)/libexec
+DATAROOTDIR=$(PREFIX)/share
+DATADIR=$(DATAROOTDIR)
+SYSCONFDIR=$(PREFIX)/etc
+SHAREDSTATEDIR=$(PREFIX)/com
+LOCALSTATEDIR=$(PREFIX)/var
+RUNSTATEDIR=$(LOCALSTATEDIR)/run
+INCLUDEDIR=$(PREFIX)/include
+OLDINCLUDEDIR=/usr/include
+DOCDIR=$(DATAROOTDIR)/doc/$(PACKAGE)
+INFODIR=$(DATAROOTDIR)/info
+LIBDIR=$(EXEC_PREFIX)/lib
+LOCALEDIR=$(DATAROOTDIR)/locale
+MANDIR=$(DATAROOTDIR)/man
+MAN1DIR=$(MANDIR)/man1
+MANEXT=.1
+MAN1EXT=.1
+
+all:
+
+check:
+	echo check ok
+
+install:
+	$(INSTALL) -d $(DESTDIR)$(BINDIR)/bin
+	$(INSTALL) cluster-tool $(DESTDIR)$(BINDIR)/cluster-tool

@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# vi: set filetype=bash autoindent expandtab shiftwidth=2 tabstop=2:
+# edwbuck 16FEB2022 <edwbuck@gmail.com>
+# shellcheck disable=SC2034
+
+# Ezmeral Data Fabric setup tool
+
+SELF=$(readlink -nf "$0")
+SCRIPT_NAME=$(basename "${SELF}")
+export SCRIPT_NAME
+
+function print_help() {
+  printf "Usage: %s VERB DIRECT_OBJECT [options]\n" "${SCRIPT_NAME}"
+  printf "\n"
+  printf "Repository Commands:\n"
+  printf "  create repo        Creates a package repository\n"
+  printf "  update repo        Updates a package repository\n"
+  printf "  delete repo        Deletes a package repository\n"
+  printf "  permit repo        Permits network access to a package repository\n"
+  printf "  revoke repo        Revokes network access to a package repository\n"
+}
+
+function detect_os() {
+  DISTRO_ID=$(awk 'BEGIN{ FS="=" } $1=="ID" {gsub(/"/, "", $2); print $2}' /etc/os-release)
+  DISTRO_LIKE=$(awk 'BEGIN{ FS="=" } $1=="ID_LIKE" {gsub(/"/, "", $2); print $2}' /etc/os-release)
+}
+
+function parse_create_repo() {
+  printf "parse_create_repo"
+}
+
+function create_yum_repo() {
+  mkdir -p "${DIR_PATH}"
+}
+
+if ! OPTS=$(getopt --name "${SCRIPT_NAME}" -u --options h --longoptions help -- "$@"); then printf "\n"; print_help; exit 1; fi
+
+eval set -- "${OPTS}"
+while (( $# )); do
+  case $1 in 
+    -h|--help)   print_help; exit 0;        ;;
+    --)          shift 1; break ;;
+  esac
+done
+
+VERB=$1;   shift 1;
+OBJECT=$1; shift 1;
+#if (( $# != 0 )); then printf "Illegal parameter \"%s\"\n\n" "$1"; print_help; exit 1; fi
+
+SUPPORTED_OBJECTS=( repo )
+REPO_VERBS=( create delete update permit revoke )
+
+declare -A SUPPORTED_VERBS
+SUPPORTED_VERBS[repo]="REPO_VERBS[@]"
+
+if ! [[ ( ${SUPPORTED_OBJECTS[*]} =~ (^|[[:space:]])"${OBJECT}"($|[[:space:]]) ) &&
+        ( ${!SUPPORTED_VERBS[${OBJECT}]} =~ (^|[[:space:]])"${VERB}"($|[[:space:]]) ) ]]; then
+  printf "Unsupported Command \"%s %s\"\n\n" "${VERB}" "${OBJECT}"; print_help; exit 1;
+fi
+
+
+detect_os
+
+## dependency createrepo

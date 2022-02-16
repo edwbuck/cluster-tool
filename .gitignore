@@ -1,0 +1,3 @@
+packaging/Fedora/*.rpm
+packaging/Fedora/rpm/
+packaging/Fedora/srpm/
